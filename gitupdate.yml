@@ -1,0 +1,66 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  ignore_errors: true  
+
+  vars:
+    file: /home/ansible/EC2InstanceAnsible/create_ec2_instance.yml
+    url: https://github.com/cloudnovice718/EC2InstanceAnsible.git
+    dest: /home/ansible/EC2InstanceAnsible
+    username: cloudnovice718
+    token: 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
+
+  tasks:
+
+    - name: clone git repository
+      shell: git clone {{ url }}
+
+    - name: verify repo is present in directory
+      stat: path={{ dest }}
+      register: result
+
+    - debug: var=result
+
+    - name: Adding file to git repository
+      shell: 
+      args:
+        chdir: "{{ dest }}"
+        cmd: git add {{ file }}
+      register: gitadd
+      when:  result.stat.exists and result.stat.isdir
+
+    - debug: var=gitadd
+
+    - name: Committing file to git repository
+      shell: 
+      args:
+        chdir: "{{ dest }}"
+        cmd: git commit -m "initial commit" 
+      register: gitcommit
+      when:  result.stat.exists and result.stat.isdir
+
+    - debug: var=gitcommit
+    
+
+    - name: Committing file to git repository
+      shell: 
+      args:
+        chdir: "{{ dest }}"
+        cmd: git push origin HEAD:master 
+      register: gitpush
+      when:  result.stat.exists and result.stat.isdir
+
+    # - name: Push changes to main branch of repository
+    #   expect: 
+    #     chdir: "{{ dest }}"
+    #     command: git push origin HEAD:master
+    #     responses:
+    #       Username for 'https://github.com': "{{ username }}"
+    #       Password for 'https://{{ username }}@github.com': "{{ token }}"
+    #     timeout: 10
+    #   register: gitpush
+    #   when:  result.stat.exists and result.stat.isdir
+
+    - debug: var=gitpush
+
