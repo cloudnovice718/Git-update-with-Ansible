@@ -10,7 +10,7 @@
     dest: /home/user/example
     username: user
     token: MyAccessTokenFromGithub
-		version: master
+    version: master
 
   tasks:
 	
