@@ -5,14 +5,24 @@
   ignore_errors: true  
 
   vars:
-    file: /home/ansible/EC2InstanceAnsible/create_ec2_instance.yml
-    url: https://github.com/cloudnovice718/EC2InstanceAnsible.git
-    dest: /home/ansible/EC2InstanceAnsible
-    username: cloudnovice718
-    token: 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
+    file: /home/user/myfile.py
+    url: https://github.com/user/example.git
+    dest: /home/user/example
+    username: user
+    token: MyAccessTokenFromGithub
+    version: master
 
   tasks:
-
+  
+    - name: Ensure git repository is up to date
+      git:
+        repo: "{{ url }}"
+        dest: "{{ url }}"
+        update: yes
+        version: "{{ version }}"
+      register: gitrepo
+      
+# Alternative task for empty repositories      
     - name: clone git repository
       shell: git clone {{ url }}
 
@@ -42,7 +52,6 @@
 
     - debug: var=gitcommit
     
-
     - name: Committing file to git repository
       shell: 
       args:
@@ -50,7 +59,8 @@
         cmd: git push origin HEAD:master 
       register: gitpush
       when:  result.stat.exists and result.stat.isdir
-
+      
+# Experimenting with expect module for automated credential entry
     # - name: Push changes to main branch of repository
     #   expect: 
     #     chdir: "{{ dest }}"
