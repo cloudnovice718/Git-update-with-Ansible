@@ -14,52 +14,52 @@
 
   tasks:
 	
-	  - name: Ensure git repo is active and up to date
-    	git:
+     - name: Ensure git repo is active and up to date
+    	 git:
       	repo: "{{ url }}"
       	dest: "{{ dest }}"
       	update: yes
       	version: "{{ version }}"
-    	register: gitrepo
+    	 register: gitrepo
 			
-		- debug: var=gitrepo
+		  - debug: var=gitrepo
 
 # Alternative task if working with an empty repository
-    - name: clone git repository
-      shell: git clone {{ url }}
+      - name: clone git repository
+        shell: git clone {{ url }}
 
-    - name: verify repo is present in directory
-      stat: path={{ dest }}
-      register: result
+      - name: verify repo is present in directory
+        stat: path={{ dest }}
+        register: result
 
-    - debug: var=result
+      - debug: var=result
 
-    - name: Adding file to git repository
-      shell: 
-      args:
-        chdir: "{{ dest }}"
-        cmd: git add {{ file }}
-      register: gitadd
-      when:  result.stat.exists and result.stat.isdir
+      - name: Adding file to git repository
+        shell: 
+        args:
+          chdir: "{{ dest }}"
+          cmd: git add {{ file }}
+        register: gitadd
+        when:  result.stat.exists and result.stat.isdir
 
-    - debug: var=gitadd
+      - debug: var=gitadd
 
-    - name: Committing file to git repository
-      shell: 
-      args:
-        chdir: "{{ dest }}"
-        cmd: git commit -m "initial commit" 
-      register: mycommit
-      when:  result.stat.exists and result.stat.isdir
+      - name: Committing file to git repository
+        shell: 
+        args:
+          chdir: "{{ dest }}"
+          cmd: git commit -m "initial commit" 
+        register: mycommit
+        when:  result.stat.exists and result.stat.isdir
 
-    - debug: var=mycommit    
+      - debug: var=mycommit    
 
-    - name: Committing file to git repository
-      shell: 
-      args:
-        chdir: "{{ dest }}"
-        cmd: git push origin HEAD:master 
-      register: gitpush
+      - name: Committing file to git repository
+        shell: 
+        args:
+          chdir: "{{ dest }}"
+          cmd: git push origin HEAD:master 
+        register: gitpush
       when:  result.stat.exists and result.stat.isdir
 			
 # Experimenting with expect module for automated credential entry
@@ -74,6 +74,6 @@
     #   register: gitpush
     #   when:  result.stat.exists and result.stat.isdir
 
-    - debug: var=gitpush
+      - debug: var=gitpush
 
 
