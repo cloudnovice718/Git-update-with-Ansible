@@ -17,7 +17,7 @@
     - name: Ensure git repository is up to date
       git:
         repo: "{{ url }}"
-        dest: "{{ url }}"
+        dest: "{{ dest }}"
         update: yes
         version: "{{ version }}"
       register: gitrepo
